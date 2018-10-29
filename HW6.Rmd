@@ -1,0 +1,68 @@
+---
+title: "HW6"
+author: "Ian Driscoll"
+date: "10/2/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 6A
+
+```{r}
+p <- seq(0,1,length=100)
+power <- pbinom(40,100,p) + (1 - pbinom(60, 100, p))
+plot(p,power, type='l', main = "Power as fn of p")
+pbinom(40,100,.5) + (1 - pbinom(60, 100, .5))
+```
+
+The limiting power is .046, or 4.6%, as p appproaches 0.5. The limiting power is 1, or 100%, as p approaches 0 and 1.
+
+## 6B
+
+```{r}
+# Sample size 25
+mu = seq(-1.5, 1.5, by = 0.1)
+c = -1.645*2
+power = 2 * pnorm(c, mean = mu, sd = 1)
+plot(mu, power)
+
+c2 = -1.96 * 2
+power2 = 2 * pnorm(c2, mean = mu, sd = 1)
+plot(mu, power2)
+
+# Sample size 100
+c3 = -1.645 * 10 / 10
+power3 = 2 * pnorm(c3, mu, 1)
+plot(mu, power3)
+
+c4 = -1.96
+power4 = 2 * pnorm(c4, mean = mu, sd = 1)
+plot(mu, power4)
+```
+
+With a smaller alpha value the power of the test decreases, and as the mean increases the power increases as well. With a larger sample size the power is larger with smaller mu values.
+
+## 6F
+
+```{r}
+total = 0
+for (i in c(0:39, 61:100)) {
+  total = total + dbinom(i, 100, 0.5)
+}
+total
+
+```
+
+## 6G
+
+```{r}
+dl = c(103.768, 61.675, 71.210, 106.755, 92.295, 88.017, 73.154, 91.052, 100.615, 108.579, 123.086, 76.014, 102.754, 73.003, 84.023, 89.222, 88.062, 90.677, 82.115, 90.479)
+dl_mean = mean(dl)
+dl_mean
+dl_sd = sd(dl)
+dl_sd
+```
+
