@@ -2,7 +2,7 @@
 title: "HW5"
 author: "Ian Driscoll"
 date: "9/26/2018"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}

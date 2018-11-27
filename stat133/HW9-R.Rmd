@@ -1,0 +1,48 @@
+---
+title: "HW9-R"
+author: "Ian Driscoll"
+date: "11/5/2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 9A.
+
+```{r}
+dogs = read.delim("dogs.txt", header = FALSE, sep = " ")
+concentrations = c(dogs$V1, dogs$V2, dogs$V3, dogs$V4, dogs$V5, dogs$V6, dogs$V7, dogs$V8, dogs$V9, dogs$V10)
+drugs = rep(c("Isofluorane", "Halothane", "Cyclopropane"), 10)
+dogs = data.frame(drugs, concentrations)
+summary(aov(concentrations~drugs, data=dogs))
+
+dogs$drugs = as.factor(dogs$drugs)
+kruskal.test(concentrations~drugs, data=dogs)
+```
+
+## 9B.
+
+```{r}
+aj = read.delim("aj.txt", header = FALSE)
+c57 = read.delim("c57.txt", header = FALSE)
+f2 = read.delim("f2.txt", header = FALSE)
+species = c(rep("aj", 53), rep("c57", 53), rep("f2", 28))
+squares = c(aj$V1, c57$V1, f2$V1)
+mice = data.frame(species, squares)
+pairwise.t.test(mice$squares, mice$species, p.adjust.method = "bonferroni")
+```
+
+## 9C.
+
+```{r}
+type = c(rep("I", 9), rep("II", 6), rep("III", 5))
+cycles = c(1.7, 1.9, 6.1, 12.5, 16.5, 25.1, 30.5, 42.1, 82.5, 13.6, 19.8, 25.2, 46.2, 46.2, 61.1, 13.4, 20.9, 25.1, 29.7, 46.9)
+stopwatches = data.frame(type, cycles)
+summary(aov(cycles~type, data=stopwatches))
+
+stopwatches$type = as.factor(stopwatches$type)
+kruskal.test(cycles~type, data=stopwatches)
+```
+

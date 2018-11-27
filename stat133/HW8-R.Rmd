@@ -1,0 +1,92 @@
+---
+title: "HW8"
+author: "Ian Driscoll"
+date: "11/1/2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 8E.
+
+```{r}
+A = c(79.98, 80.04, 80.02, 80.04, 80.03, 80.03, 80.04, 79.97, 80.05, 80.03, 80.02, 80.00, 80.02)
+B = c(80.02, 79.94, 79.98, 79.97, 79.97, 80.03, 79.95, 79.97)
+C = c(A, B)
+diff_obs = mean(A) - mean(B)
+diff_obs
+diff_random = c()
+for (i in 1:1000) {
+  A_rand = sample(C, length(A), replace = TRUE)
+  B_rand = sample(C, length(B), replace = TRUE)
+  diff_random[i] = mean(A_rand) - mean(B_rand)
+}
+p_val = sum(abs(diff_random) >= abs(diff_obs)) / 1000
+p_val
+hist(diff_random, xlab = "Difference in means of A and B")
+```
+
+The observed value would fall on the very upper tail of the curve. This is very similar to the example.
+
+b.) They both test whether two samples are drawn from the same and independent distributions. Both take into account the sample size of each observation group.
+
+## 8F.
+
+```{r}
+library(ggplot2)
+mice = data.frame(present = c(22.8, 10.2, 20.8, 27, 19.2, 9, 14.2, 19.8, 14.5, 14.8),
+                  absent = c(23.5, 31, 19.5, 26.2, 26.5, 25.2, 24.5, 23.8, 27.8, 22))
+ggplot(mice) + geom_dotplot(aes(x = present)) + geom_dotplot(aes(x = absent, fill = "red"))
+
+```
+
+## 8G.
+
+```{r}
+p_mean = mean(mice$present)
+a_mean = mean(mice$absent)
+p_minus_a = p_mean - a_mean
+s_p = sqrt((9 * var(mice$present) + 9 * var(mice$absent)) / 18)
+se95 = 1.734 * s_p * sqrt(2/9)
+ci95 = c(p_minus_a - se95, p_minus_a + se95)
+ci95
+
+t.test(mice$present, mice$absent)
+```
+
+The p-value is 0.009197. This is not paired since each treatment corresponds to a different mouse.
+
+## 8H.
+
+```{r}
+wilcox.test(mice$present, mice$absent)
+```
+
+The assumptions made for the Mann-Whitney Test are that there is one categorical dependent variable (weight gains), one independent dichotomous variable (present vs. absent), observations are independent, and the null hypothesis is the distributions are the same, and the alternative is that they are not the same. The p-value shows we should reject the null that the distributions are the same.
+
+## 8I.
+
+```{r}
+bodytemp = read.delim("bodytemp.txt", sep = " ", header = TRUE)
+females = bodytemp[bodytemp$gender == 2, ]
+males = bodytemp[bodytemp$gender == 1, ]
+t.test(males$temperature, females$temperature)
+```
+
+A 95% confidence interval would be (-0.54, -0.04). The approximation to normal would not be applicable here, since we reject the null hypothesis at significance level .05 that states there is no difference in the means.
+
+```{r}
+t.test(males$rate, females$rate)
+```
+A 95% confidence interval would be (-3.24, 1.67). A normal approximation would be appropriate since we can assume there is no difference in the means.
+
+```{r}
+wilcox.test(males$temperature, females$temperature)
+wilcox.test(males$rate, females$rate)
+```
+
+Using both parametric and nonparametric tests, I can conclude that there is not enough evidence to suggest that there is a difference in mean heart rate between males and females, but I can conclude that there is a difference between males and females in mean body temperature.
+
+

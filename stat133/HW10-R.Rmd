@@ -1,0 +1,57 @@
+---
+title: "HW10-R"
+author: "Ian Driscoll"
+date: "11/20/2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 10F.
+
+### a.
+
+```{r}
+bodytemp = read.delim("bodytemp.txt", sep = " ")
+males = bodytemp[bodytemp$gender == 1, ]
+females = bodytemp[bodytemp$gender == 2, ]
+plot(males$temperature, males$rate)
+plot(females$temperature, females$rate)
+```
+
+It seems that there is a slight positive correlation between body temperature and heart rate.
+
+### b.
+
+```{r}
+library(ggplot2)
+ggplot(bodytemp) + geom_point(aes(x = temperature, y = rate, col = gender))
+```
+
+It seems that there is a slightly more positive correlation among females.
+
+### c.
+
+```{r}
+male_lm = lm(formula = rate ~ temperature, data = males)
+summary(male_lm)
+plot(males$temperature, male_lm$residuals)
+```
+
+There appears to be no linear correlation in the residual plot, which shows that the simple linear regression is a good fit. From the summary of the regression, the slope is 1.645 and the standard error is 1.039.
+
+### d.
+
+```{r}
+female_lm = lm(formula = rate ~ temperature, data = females)
+summary(female_lm)
+plot(females$temperature, female_lm$residuals)
+```
+
+There appears to be no linear correlation in the residual plot, which shows that the simple linear regression is a good fit. From the summary of the regression, the slope is 3.128 and the standard error is 1.316.
+
+
+
+
