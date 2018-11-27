@@ -1,0 +1,65 @@
+---
+title: "Dieroller"
+author: "Ian Driscoll"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to dieroller}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+library(dieroller)
+```
+
+## Coin Tossing
+
+The package `"dieroller"` is a use for rolling a 6-sided die and plotting the results.
+
+
+## Creating a `die`
+
+The first step is to create a `"die"` object with the function `die()`:
+
+```{r}
+testdie = die()
+testdie
+```
+
+By default, `die()` creates a _fair_ die with standard sides 1-6, and with probability values for each side of 1/6.
+
+You can change the defaults with arguments `sides` and `prob`:
+
+```{r}
+loaded <- die(sides = c('x', 'y', 'z', 'a', 'b', 'c'), prob = c(0.4, 0.2, 0.1, 0.1, 0.1, 0.1))
+loaded
+```
+
+
+## Rolling a die
+
+Once you have defined a `"die"` object, you can use the function `roll()` to
+_roll_ a die a given number of `times`. The output will be an object of class 
+`"roll"`, which will contain the vector of `rolls`:
+
+```{r}
+roll100 <- roll(testdie, times = 100)
+roll100
+```
+
+The `summary()` function gives you a nice table of frequencies:
+```{r}
+summary(roll100)
+```
+
+
+## Plot of relative frequencies
+
+You can use the function `plot()` to create a graohic with the relative 
+frequencies of a series of die rolls:
+
+```{r, fig.show='hold'}
+plot(roll100)
+```

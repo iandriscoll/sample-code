@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1535151805385.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "205030859",
+    "id" : "FC9B1A6E",
+    "lastKnownWriteTime" : 1535151802,
+    "last_content_update" : 1535153084546,
+    "path" : "~/Downloads/lab1.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "116,8",
+        "scrollLine" : "110"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

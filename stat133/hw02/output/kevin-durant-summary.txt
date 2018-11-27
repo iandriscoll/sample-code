@@ -1,0 +1,40 @@
+                 team_name      game_date    season        period    
+ Golden State Warriors:915   1/29/17 : 26   2016:915   Min.   :1.00  
+                             11/3/16 : 24              1st Qu.:1.00  
+                             12/22/16: 23              Median :2.00  
+                             12/25/16: 23              Mean   :2.34  
+                             11/13/16: 21              3rd Qu.:3.00  
+                             11/16/16: 21              Max.   :4.00  
+                             (Other) :777                            
+ minutes_remaining seconds_remaining shot_made_flag    
+ Min.   : 0.000    Min.   : 0.00     Length:915        
+ 1st Qu.: 2.000    1st Qu.:13.00     Class :character  
+ Median : 6.000    Median :27.00     Mode  :character  
+ Mean   : 5.833    Mean   :28.02                       
+ 3rd Qu.: 9.000    3rd Qu.:43.00                       
+ Max.   :11.000    Max.   :59.00                       
+                                                       
+             action_type           shot_type   shot_distance  
+ Jump Shot         :348   2PT Field Goal:643   Min.   : 0.00  
+ Pullup Jump shot  :114   3PT Field Goal:272   1st Qu.: 2.00  
+ Fadeaway Jump Shot: 48                        Median :14.00  
+ Layup Shot        : 35                        Mean   :13.12  
+ Driving Layup Shot: 34                        3rd Qu.:24.00  
+ Running Layup Shot: 30                        Max.   :58.00  
+ (Other)           :306                                       
+                   opponent         x                 y         
+ Portland Trail Blazers: 70   Min.   :-246.00   Min.   :-39.00  
+ Los Angeles Clippers  : 61   1st Qu.: -29.00   1st Qu.: 11.00  
+ Oklahoma City Thunder : 61   Median :   0.00   Median : 80.00  
+ New Orleans Pelicans  : 55   Mean   :  11.43   Mean   : 98.54  
+ Denver Nuggets        : 51   3rd Qu.:  73.50   3rd Qu.:173.50  
+ Los Angeles Lakers    : 50   Max.   : 240.00   Max.   :572.00  
+ (Other)               :567                                     
+     name               minute     
+ Length:915         Min.   : 1.00  
+ Class :character   1st Qu.:11.00  
+ Mode  :character   Median :23.00  
+                    Mean   :22.25  
+                    3rd Qu.:32.00  
+                    Max.   :48.00  
+                                   
