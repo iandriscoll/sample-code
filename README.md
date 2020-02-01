@@ -1,1 +1,7 @@
-This repository contains samples of my code from classwork. The folder "stat133" contains files from Stat 133, which is statistical analysis using R. The folder "cs61a" contains the coursework for Computer Science 61A, which is data structures that used Python, SQL, and Scheme."stat135" is a more advanced course on R and statistical survey methods and analyses.
+# Sample Code
+
+Within this repository are several projects I have completed in various areas, namely:
+-Multiclass image classifier using R
+-Crime rate regression using R
+-Tower defense game similar to Plants vs. Zombies using Python
+-Random world generator using Java
