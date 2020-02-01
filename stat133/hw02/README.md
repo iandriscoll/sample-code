@@ -1,1 +1,0 @@
-This homework deals with manipulating data frames and creating plots using dplyr and ggplot2, and also working with a more coplex data structure.

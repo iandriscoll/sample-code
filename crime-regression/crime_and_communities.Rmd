@@ -1,0 +1,139 @@
+---
+title: "Crime and Communities"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+
+**Group Member 1 Name: **Ian Driscoll   **Group Member 1 SID: **3031896752
+
+The crime and communities dataset contains crime data from communities in the United States. The data combines socio-economic data from the 1990 US Census, law enforcement data from the 1990 US LEMAS survey, and crime data from the 1995 FBI UCR. More details can be found at https://archive.ics.uci.edu/ml/datasets/Communities+and+Crime+Unnormalized.
+
+The dataset contains 125 columns total; $p=124$ predictive and 1 target (ViolentCrimesPerPop). There are $n=1994$ observations. These can be arranged into an $n \times p = 1994 \times 127$ feature matrix $\mathbf{X}$, and an $n\times 1 = 1994 \times 1$ response vector $\mathbf{y}$ (containing the observations of ViolentCrimesPerPop).
+
+Once downloaded (from bCourses), the data can be loaded as follows.
+
+```{r}
+library(readr)
+CC <- read_csv("crime_and_communities_data.csv")
+print(dim(CC))
+y <- CC$ViolentCrimesPerPop
+X <- subset(CC, select = -c(ViolentCrimesPerPop))
+```
+
+
+# Dataset exploration
+
+All of these variables are numerical. The summary statistics are displayed below, and these variables are a mix of percentages, counts, and counts per capita. Due to the mixed nature of these variable types, normalizing the data and mean-centering it will be best in order to factor in all variables equitably. Most of the entries (1675/1994=84%) are missing data for LEMAS predictors, so LEMAS predictors will have to be omitted. Additionally, several of the variables are goal variables, so they will be omitted as well for interest's sake.
+
+```{r}
+summary(X)
+```
+
+# Data Processing
+Due to the LEMAS survey not being applicable to most of the datapoints, we will remove the columns where the 1675 entries have missing data. We are then left with the first 98 columns of the dataset.
+```{r}
+X = X[,1:98]
+X = X[-is.na(X),]
+y = y[-is.na(X)]
+```
+
+# Regression task
+
+We will first split the data 75%/25% and leave the 25% as a test set for model performance comparison later.
+
+```{r}
+smp_size <- floor(0.75 * nrow(X))
+
+set.seed(123)
+train_ind = sample(seq_len(nrow(X)), size = smp_size)
+
+trainX = X[train_ind, ]
+testX = X[-train_ind, ]
+trainY = y[train_ind]
+testY = y[-train_ind]
+
+train = data.frame(trainX, "y"=trainY)
+train = na.omit(train)
+test = data.frame(testX, "y"=testY)
+test = na.omit(test)
+```
+Our first step will be to build a simple multiple regression model and examine the significance of the various features. We will examine feature importances and select the most relevant/significant ones. Many of these features are hughly correlated, so by including the highest significance features we are eliminating redundancy.
+```{r}
+model = lm(y ~ ., data=train)
+summary(model)
+library(caret)
+importances = data.frame(varImp(model, scale=FALSE))
+importances$variable = row.names(importances)
+
+imp = importances[order(importances$Overall, decreasing=TRUE),]
+
+head(imp, 40)
+```
+We will choose the most important features and build our next regression models, tweaking our feature set when necessary. We will also normalize the features.
+```{r}
+features = imp$variable[1:35]
+train = train[, c(features, "y")]
+test = test[, c(features, "y")]
+library(BBmisc)
+train = data.frame(normalize(train[,features]), "y"=train$y)
+test = data.frame(normalize(test[,features]), "y"=test$y)
+```
+The three different types of regressions we will be using are simple linear regression, random forest regression, and ridge regression. First we will build a Random Forest regression model.
+```{r}
+set.seed(123)
+library(randomForest)
+rf = randomForest(
+  formula = y~.,
+  data    = train
+)
+rf
+plot(rf, main="MSE for each number of trees")
+which.min(rf$mse)
+```
+We can see that the MSE decreases to a certain point and then is minimized with 339 trees. We will now rebuild our model with the optimal number of trees.
+```{r}
+set.seed(123)
+rf = randomForest(
+  formula = y~.,
+  data    = train,
+  ntree = 339
+)
+rf
+```
+Our next model will be a ridge regression model. We will use the glmnet package and set alpha to 0 to perform ridge regression. We will test a set of lambda values using cross validation in order to find the optimal lambda for our model.
+```{r}
+library(glmnet)
+lambda_seq = 10^seq(2, -2, by = -.1)
+ridge_cv = cv.glmnet(data.matrix(train[,features]), train$y, alpha = 0, lambda = lambda_seq)
+best_lambda = ridge_cv$lambda.min
+best_lambda
+ridge = glmnet(data.matrix(train[,features]), train$y, alpha = 0, lambda  = best_lambda)
+summary(ridge)
+```
+Our final regression model will be a simple multiple regression using our predictor variables.
+```{r}
+linear = lm(y~., data=train)
+summary(linear)
+```
+We will now use these three built models and compare their performance on the test set. We will predict using the models, find the residuals, and calculate the Mean Squared Error (MSE) as our performance metric. 
+```{r}
+linear_pred = predict(linear, test[,features])
+rf_pred = predict(rf, test[,features])
+ridge_pred = predict(ridge, data.matrix(test[,features]))
+
+mse = function(pred, actual) {
+  resids = pred - actual
+  sqer = resids^2
+  return (mean(sqer))
+}
+
+linear_mse = mse(linear_pred, test$y)
+rf_mse = mse(rf_pred, test$y)
+ridge_mse = mse(ridge_pred, test$y)
+mses = c("LR"=linear_mse, "RF"=rf_mse, "Ridge"=ridge_mse)
+mses
+barplot(mses, main="Test MSE for each model on Violent Crimes Per Pop")
+```
+We can see that our Random Forest regression model performs best out of all 3 models on the test set. The simple linear and ridge regression models performed similarly, but in order to predict violent crimes per population we will choose to use the Random Forest regression model that we built.
